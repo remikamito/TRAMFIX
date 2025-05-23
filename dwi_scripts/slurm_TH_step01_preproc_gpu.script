@@ -1,0 +1,47 @@
+#!/bin/bash
+#SBATCH --account punim2175
+#SBATCH --nodes=1
+#SBATCH --ntasks=1
+#SBATCH --cpus-per-task=8
+#SBATCH --time=0-08:00:00
+#SBATCH --mem=128G
+#SBATCH --partition gpu-a100
+#SBATCH --gres=gpu:1
+#SBATCH -o /data/gpfs/projects/punim2175/T-HEADS/scripts/slurm_logs/slurm-%N.%j.out
+#SBATCH -e /data/gpfs/projects/punim2175/T-HEADS/scripts/slurm_errors/slurm-%N.%j.err
+
+# Author: Remika Mito
+# Date: 9 May 2025
+# Description: This script runs the preprocessing step for Travelling Heads in batches on slurm (GPU version)
+
+# check arguments are provided
+if [ "$#" -ne 3 ]; then
+  echo "Usage: script_TH_step01_preproc_gpu.sh [ID] [SITE] [PROTOCOL]"
+  exit 1
+fi
+
+# print start time for script
+start_time=$(date +%s)
+echo "Start time: $(date -d @$start_time)"
+
+# specify inputs
+ID=$1
+SITE=$2
+PROTOCOL=$3
+DWIDIR=/data/gpfs/projects/punim2175/T-HEADS/mif/${ID}/${SITE}
+OUTDIR=/data/gpfs/projects/punim2175/T-HEADS/mif/${ID}/${SITE}/DWI_${PROTOCOL}
+SCRIPTDIR=/data/gpfs/projects/punim2175/T-HEADS/scripts
+
+
+if [ "$PROTOCOL" == "all" ]; then
+	PROTOCOLS=`ls -d $DWIDIR/DWI* | cut -d'/' -f10 | cut -d'_' -f2 `
+	for DWI in $PROTOCOLS; do
+		bash $SCRIPTDIR/script_TH_step01_preprocess.sh ${ID} ${SITE} ${DWI}
+	done
+else
+	bash $SCRIPTDIR/script_TH_step01_preprocess.sh ${ID} ${SITE} ${PROTOCOL}
+fi
+
+# print end time
+end_time=$(date +%s)
+echo "End time: $(date -d @$end_time)"

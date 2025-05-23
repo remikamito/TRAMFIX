@@ -1,0 +1,44 @@
+#!/bin/bash
+#SBATCH --account punim2175
+#SBATCH --nodes=1
+#SBATCH --ntasks=1
+#SBATCH --cpus-per-task=8
+#SBATCH --time=0-06:00:00
+#SBATCH --mem=128G
+#SBATCH --partition=sapphire
+#SBATCH -o /data/gpfs/projects/punim2175/T-HEADS/scripts/slurm_logs/slurm-%N.%j.out
+#SBATCH -e /data/gpfs/projects/punim2175/T-HEADS/scripts/slurm_errors/slurm-%N.%j.err
+
+# Author: Remika Mito
+# Date: 12 May 2025
+# Description: This script runs brain mask estimation using BET and tensor & metrics
+
+# check arguments are provided
+if [ "$#" -ne 2 ]; then
+  echo "Usage: slurm_TH_step03_mask_tensor.script [ID] [SITE]"
+  exit 1
+fi
+
+# print start time for script
+start_time=$(date +%s)
+echo "Start time: $(date -d @$start_time)"
+
+# specify inputs
+ID=$1
+SITE=$2
+DWIDIR=/data/gpfs/projects/punim2175/T-HEADS/mif/${ID}/${SITE}
+SCRIPTDIR=/data/gpfs/projects/punim2175/T-HEADS/scripts
+
+# run step
+if [ "$SITE" == "all" ]; then
+	SITES=`echo FloreyPrisma FloreyVida MBI RCH`
+	for site in $SITES; do
+		bash $SCRIPTDIR/script_TH_masks_tensor.sh ${ID} ${site} 
+	done
+else
+	bash $SCRIPTDIR/script_TH_masks_tensor.sh ${ID} ${SITE} 
+fi
+
+# print end time
+end_time=$(date +%s)
+echo "End time: $(date -d @$end_time)"

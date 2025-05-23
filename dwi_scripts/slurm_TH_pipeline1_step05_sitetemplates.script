@@ -1,0 +1,62 @@
+#!/bin/bash
+#SBATCH --account punim2175
+#SBATCH --nodes=1
+#SBATCH --ntasks=1
+#SBATCH --cpus-per-task=8
+#SBATCH --time=0-06:00:00
+#SBATCH --mem=128G
+#SBATCH --partition=sapphire
+#SBATCH -o /data/gpfs/projects/punim2175/T-HEADS/scripts/slurm_logs/slurm-%N.%j.out
+#SBATCH -e /data/gpfs/projects/punim2175/T-HEADS/scripts/slurm_errors/slurm-%N.%j.err
+
+# Author: Remika Mito
+# Date: 22 May 2025
+# Description: This script runs site-specific templates
+
+# check arguments are provided
+if [ "$#" -ne 1 ]; then
+  echo "Usage: slurm_TH_step05_site_templates.script [SITE]"
+  exit 1
+fi
+
+# load modules
+module load MRtrix/3.0.4
+
+# specify inputs
+SITE=$1
+DWIDIR=/data/gpfs/projects/punim2175/T-HEADS
+SCRIPTDIR=/data/gpfs/projects/punim2175/T-HEADS/scripts
+SITEDIR=${DWIDIR}/templates/${SITE}_template
+
+# Code colours
+LBLUE='\033[1;34m'
+NC='\033[0m'
+
+# Step 0: Create template directory
+if [ ! -d ${DWIDIR}/templates/${SITE}_template/mask_input ];then
+	echo -e "${LBLUE}[INFO]:${NC} Creating template directory for ${ID}."
+	mkdir -p ${DWIDIR}/templates/${SITE}_template/fod_input ${DWIDIR}/templates/${SITE}_template/mask_input
+else
+	echo -e "${LBLUE}[INFO]:${NC} template dirs exist."
+fi
+
+subjects=$(ls -d ${DWIDIR}/mif/* | cut -d'/' -f8)
+
+# Step 1: Symlink fods and masks
+for subject in $subjects; do
+	if [ ! -f ${SITEDIR}/fod_input/${subject}.mif ]; then
+		cd ${SITEDIR}/fod_input
+		ln -sr ../../../mif/${subject}/${SITE}/DWI_harmdwi/wmfod_norm.mif ${subject}.mif
+		cd ${SITEDIR}/mask_input
+		mrconvert ../../../mif/${subject}/${SITE}/DWI_harmdwi/brain_mask.nii.gz ${subject}.mif
+		cd ${SCRIPTDIR}
+	else
+		echo -e "${LBLUE}[INFO]:${NC} fods & masks exist."
+	fi
+done
+
+# Step 2: Run population template
+population_template ${SITEDIR}/fod_input/ -mask_dir ${SITEDIR}/mask_input/ ${SITEDIR}/${SITE}_template.mif -voxel_size 1.25 
+
+# unload modules
+module unload MRtrix/3.0.4
