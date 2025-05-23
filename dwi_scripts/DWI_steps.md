@@ -76,6 +76,11 @@ Here, the FOD estimation is done using site-averaged response functions. Site-sp
 
 Here, FOD estimation is performed using globallly averaged response functions (across sites). Population template is build using all sites.
 
+### FOD modelling scripts:
+- [`msmt_csd_mtnorm_globalRF.sh`](/dwi_scripts/msmt_csd_mtnorm_globalRF.sh): performs MSMT-CSD using globally averaged RFs.
+- [`slurm_TH_pipeline2_step04_msmtcsd.script`](/dwi_scripts/slurm_TH_pipeline2_step04_msmtcsd.script): runs in slurm script
+
+### Population template scripts
 
 
 

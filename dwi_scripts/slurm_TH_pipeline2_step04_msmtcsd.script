@@ -1,0 +1,44 @@
+#!/bin/bash
+#SBATCH --account punim2175
+#SBATCH --nodes=1
+#SBATCH --ntasks=1
+#SBATCH --cpus-per-task=8
+#SBATCH --time=0-06:00:00
+#SBATCH --mem=128G
+#SBATCH --partition=sapphire
+#SBATCH -o /data/gpfs/projects/punim2175/T-HEADS/scripts/slurm_logs/slurm-%N.%j.out
+#SBATCH -e /data/gpfs/projects/punim2175/T-HEADS/scripts/slurm_errors/slurm-%N.%j.err
+
+# Author: Remika Mito
+# Date: 23 May 2025
+# Description: This script runs MSMT-CSD (using global-average responses)
+
+# check arguments are provided
+if [ "$#" -ne 1 ]; then
+  echo "Usage: slurm_TH_step04_msmtcsd.script [ID]"
+  exit 1
+fi
+
+# print start time for script
+start_time=$(date +%s)
+echo "Start time: $(date -d @$start_time)"
+
+# specify inputs
+ID=$1
+SITE=$2
+SCRIPTDIR=/data/gpfs/projects/punim2175/T-HEADS/scripts
+
+# Run script
+for site in RCH MBI FloreyVida FloreyPrisma; do
+	DWIDIR=/data/gpfs/projects/punim2175/T-HEADS/mif/${ID}/${site}/DWI_harmdwi
+	if [ ! -f ${DWIDIR}/wmfod_norm_globalRF.mif ];then
+		echo -e "${LBLUE}[INFO]:${NC} Running msmt-csd and mtnormalise for ${ID} at ${SITE}."
+		bash ${SCRIPTDIR}/msmt_csd_mtnorm_globalRF.sh ${ID} ${site}
+	elif [ -f ${DWIDIR}/wmfod_norm_globalRF.mif ];then
+		echo -e "${LBLUE}[INFO]:${NC} wmfod_norm_globalRF.mif already exists."
+	fi
+done
+
+# print end time
+end_time=$(date +%s)
+echo "End time: $(date -d @$end_time)"
