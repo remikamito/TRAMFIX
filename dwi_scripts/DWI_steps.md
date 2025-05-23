@@ -69,8 +69,9 @@ Here, the FOD estimation is done using site-averaged response functions. Site-sp
 ### Population template scripts:
 
 - [`slurm_TH_pipeline1_step05_sitetemplates.script`](/dwi_scripts/slurm_TH_pipeline1_step04_msmtcsd.script): Runs site-specific population templates
-- [`slurm_TH_pipeline1_step06_warp2sitetemplate.script`]()
-- [`slurm_TH_pipeline1_step07_poptemplate_1_sites.script`]()
+- [`slurm_TH_pipeline1_step06_warp2sitetemplate.script`](/dwi_scripts/slurm_TH_pipeline1_step06_warp2sitetemplate.script): performs mrregister and warps masks to site-specific templates
+- [`slurm_TH_pipeline1_step07_poptemplate.script`](/dwi_scripts/slurm_TH_pipeline1_step07_poptemplate.script): Creates population level template using site-specific templates
+- [`slurm_TH_pipeline1_step08_warp2poptemp_1_sites.script`](/dwi_scripts/slurm_TH_pipeline1_step08_warp2poptemp_1_sites.script): Performs registration of subjects to population template, and warps brain masks 
 
 ## Pipeline 2: Global processing
 
@@ -82,5 +83,5 @@ Here, FOD estimation is performed using globallly averaged response functions (a
 
 ### Population template scripts
 
-
+- [`slurm_TH_pipeline2_step05_globaltemplates.script`]():
 
