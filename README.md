@@ -7,7 +7,7 @@ This repository stores all of the code used to process and analyse the data.
 
 # DWI data processing
 
-DWI data processing scripts are stored in [dwi_scripts](/dwi_scripts).
+DWI data processing scripts are described in [dwi_scripts](/dwi_scripts/DWI_steps.md).
 
 
 # Data analysis
