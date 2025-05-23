@@ -1,0 +1,51 @@
+#!/bin/bash
+#SBATCH --account punim2175
+#SBATCH --nodes=1
+#SBATCH --ntasks=1
+#SBATCH --cpus-per-task=8
+#SBATCH --time=0-06:00:00
+#SBATCH --mem=128G
+#SBATCH --partition=sapphire
+#SBATCH -o /data/gpfs/projects/punim2175/T-HEADS/scripts/slurm_logs/slurm-%N.%j.out
+#SBATCH -e /data/gpfs/projects/punim2175/T-HEADS/scripts/slurm_errors/slurm-%N.%j.err
+
+# Author: Remika Mito
+# Date: 22 May 2025
+# Description: This script runs mrregister and mrtransform to register & warp individual subject site images to subject-specific templates.
+
+# check arguments are provided
+if [ "$#" -ne 1 ]; then
+  echo "Usage: slurm_TH_step04_warp2subtemplate.script [ID]"
+  exit 1
+fi
+
+# load modules
+module load MRtrix/3.0.4
+
+# specify inputs
+SITE=$1
+DWIDIR=/data/gpfs/projects/punim2175/T-HEADS/mif
+TEMPDIR=/data/gpfs/projects/punim2175/T-HEADS/templates/${SITE}_template
+SCRIPTDIR=/data/gpfs/projects/punim2175/T-HEADS/scripts
+
+# Code colours
+LBLUE='\033[1;34m'
+NC='\033[0m'
+
+subjects=$(ls -d ${DWIDIR}/* | cut -d'/' -f8)
+
+# Step 1: Run mrregister
+for subject in $subjects ; do 
+	mrregister ${DWIDIR}/${subject}/${SITE}/DWI_harmdwi/wmfod_norm.mif -mask1 ${DWIDIR}/${subject}/${SITE}/DWI_harmdwi/brain_mask.nii.gz ${TEMPDIR}/${SITE}_template.mif  -nl_warp ${DWIDIR}/${subject}/${SITE}/DWI_harmdwi/subject2sitetemplate_warp.mif ${DWIDIR}/${subject}/${SITE}/DWI_harmdwi/sitetemplate2subject_warp.mif 
+done
+
+# Step 2: Transform masks from site to subject template
+for subject in $subjects ; do
+	mrtransform ${DWIDIR}/${subject}/${SITE}/DWI_harmdwi/brain_mask.nii.gz -warp ${DWIDIR}/${subject}/${SITE}/DWI_harmdwi/subject2sitetemplate_warp.mif -interp nearest -datatype bit ${DWIDIR}/${subject}/${SITE}/DWI_harmdwi/mask_in_${SITE}_template_space.mif 
+done
+
+# Step 3: Compute template mask
+mrmath ${DWIDIR}/*/${SITE}/DWI_harmdwi/mask_in_${SITE}_template_space.mif  min ${TEMPDIR}/${SITE}_template_mask.mif -datatype bit
+
+# unload modules
+module unload MRtrix/3.0.4

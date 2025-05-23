@@ -1,0 +1,44 @@
+#!/bin/bash
+#SBATCH --account punim2175
+#SBATCH --nodes=1
+#SBATCH --ntasks=1
+#SBATCH --cpus-per-task=8
+#SBATCH --time=0-06:00:00
+#SBATCH --mem=128G
+#SBATCH --partition=sapphire
+#SBATCH -o /data/gpfs/projects/punim2175/T-HEADS/scripts/slurm_logs/slurm-%N.%j.out
+#SBATCH -e /data/gpfs/projects/punim2175/T-HEADS/scripts/slurm_errors/slurm-%N.%j.err
+
+# Author: Remika Mito
+# Date: 23 May 2025
+# Description: This script runs subject to population template warps
+
+# check arguments are provided
+if [ "$#" -ne 1 ]; then
+  echo "Usage: slurm_TH_step08_warp2poptemp_1_sites.script [ID]"
+  exit 1
+fi
+
+# load modules
+module load MRtrix/3.0.4
+
+# specify inputs
+ID=$1
+DWIDIR=/data/gpfs/projects/punim2175/T-HEADS/mif/${ID}
+TEMPDIR=/data/gpfs/projects/punim2175/T-HEADS/templates/pop_template_1_sites
+SCRIPTDIR=/data/gpfs/projects/punim2175/T-HEADS/scripts
+
+# iterate across sites
+for site in FloreyPrisma FloreyVida MBI RCH ; do 
+	# Step 1: Run mrregister from subject to population template
+	mrregister ${DWIDIR}/${site}/DWI_harmdwi/wmfod_norm.mif -mask1 ${DWIDIR}/${site}/DWI_harmdwi/brain_mask.nii.gz ${TEMPDIR}/wmfod_template.mif -nl_warp ${DWIDIR}/${site}/DWI_harmdwi/subject2poptemp1_sites_warp.mif ${DWIDIR}/${site}/DWI_harmdwi/poptemp1_sites_2subject_warp.mif 
+	
+	# Step 2: mrtransform wmfod
+	mrtransform ${DWIDIR}/${site}/DWI_harmdwi/wmfod_norm.mif -warp ${DWIDIR}/${site}/DWI_harmdwi/subject2poptemp1_sites_warp.mif -reorient_fod no ${DWIDIR}/${site}/DWI_harmdwi/fod_in_poptemplate1_sites_space_NOT_REORIENTED.mif 
+	
+	# Step 3: Transform masks from site to subject template
+	mrtransform ${DWIDIR}/${site}/DWI_harmdwi/brain_mask.nii.gz -warp ${DWIDIR}/${site}/DWI_harmdwi/subject2poptemp1_sites_warp.mif -interp nearest -datatype bit ${DWIDIR}/${site}/DWI_harmdwi/mask_in_poptemplate_1_sites_space.mif 
+done
+
+# unload modules
+module unload MRtrix/3.0.4
