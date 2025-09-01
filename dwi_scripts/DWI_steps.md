@@ -114,3 +114,14 @@ The following scripts run whole-brain tractography & smoothing:
 - [`slurm_TH_step10_poptemp_tckgen.script`](/dwi_scripts/slurm_TH_step10_poptemp_tckgen.script): Runs wholebrain tractography & SIFT (template as input)
 - [`slurm_TH_step11_smoothing.script`](/dwi_scripts/slurm_TH_step11_smoothing.script): Runs connectivity-based smoothing
 
+# Part 4: Whole-brain means
+
+to be updated
+
+# Part 5: TractSeg and tract means
+
+to be updated
+
+# Part 6: Fixel-level analysis
+
+to be updated
