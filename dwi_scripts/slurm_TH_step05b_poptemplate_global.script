@@ -1,0 +1,57 @@
+#!/bin/bash
+#SBATCH --account punim2175
+#SBATCH --nodes=1
+#SBATCH --ntasks=1
+#SBATCH --cpus-per-task=8
+#SBATCH --time=0-06:00:00
+#SBATCH --mem=128G
+#SBATCH --partition=sapphire
+#SBATCH -o /data/gpfs/projects/punim2175/T-HEADS/scripts/slurm_logs/slurm-%N.%j.out
+#SBATCH -e /data/gpfs/projects/punim2175/T-HEADS/scripts/slurm_errors/slurm-%N.%j.err
+
+# Author: Remika Mito
+# Date: 22 May 2025
+# Description: This script runs site-specific templates
+
+# load modules
+module load MRtrix/3.0.4
+
+# specify inputs
+DWIDIR=/data/gpfs/projects/punim2175/T-HEADS
+SCRIPTDIR=/data/gpfs/projects/punim2175/T-HEADS/scripts
+TEMPDIR=/data/gpfs/projects/punim2175/T-HEADS/templates/pop_template_2_global
+
+# Code colours
+LBLUE='\033[1;34m'
+NC='\033[0m'
+
+# Step 0: Create template directory
+if [ ! -d ${TEMPDIR}/mask_input ];then
+	echo -e "${LBLUE}[INFO]:${NC} Creating template directory for ${ID}."
+	mkdir -p ${TEMPDIR}/fod_input ${TEMPDIR}/mask_input
+else
+	echo -e "${LBLUE}[INFO]:${NC} template dirs exist."
+fi
+
+subjects=$(ls -d ${DWIDIR}/mif/* | cut -d'/' -f8)
+
+# Step 1: Symlink fods and masks
+for subject in $subjects; do
+	for site in FloreyPrisma FloreyVida MBI RCH; do
+		if [ ! -f ${TEMPDIR}/fod_input/${subject}_${site}.mif ]; then
+			cd ${TEMPDIR}/fod_input
+			ln -sr ../../../mif/${subject}/${site}/DWI_harmdwi/wmfod_norm_globalRF.mif ${subject}_${site}.mif
+			cd ${TEMPDIR}/mask_input
+			mrconvert ../../../mif/${subject}/${site}/DWI_harmdwi/brain_mask.nii.gz ${subject}_${site}.mif
+			cd ${SCRIPTDIR} 
+		else
+			echo -e "${LBLUE}[INFO]:${NC} fods & masks exist."
+		fi
+	done
+done
+
+# Step 2: Run population template
+population_template ${TEMPDIR}/fod_input/ -mask_dir ${TEMPDIR}/mask_input/ ${TEMPDIR}/wmfod_template.mif -voxel_size 1.25 
+
+# unload modules
+module unload MRtrix/3.0.4

@@ -83,5 +83,34 @@ Here, FOD estimation is performed using globallly averaged response functions (a
 
 ### Population template scripts
 
-- [`slurm_TH_pipeline2_step05_globaltemplates.script`]():
+- [`slurm_TH_step05b_poptemplate_global.script`](/dwi_scripts/slurm_TH_step05b_poptemplate_global.script): Runs global population template
+- [`slurm_TH_step08b_warp2poptemp2_global.script`](/dwi_scripts/slurm_TH_step08b_warp2poptemp2_global.script): Performs registration of subjects to population template (pooled processing), waprs brain masks
+
+# Part 3: Fixel extraction and tractography
+
+## Compute template mask
+
+As per the FBA pipeline, the next steps (Steps 11 & 12) are to compute a template mask, followed by a template fixel mask. These steps are performed as follows:
+
+```
+$ mrmath */*/DWI_harmdwi/mask_in_${template}_space.mif min ../templates/${template}/template_mask.mif -datatype bit
+$ cd ../templates/${template}
+$ fod2fixel -mask template_mask.mif -fmls_peak_value 0.06 wmfod_template.mif fixel_mask
+```
+
+*Note 1:* It is important to check that the template mask has good coverage of all brain WM to be included
+
+*Note 2:* Here, we used default values for computing fixels; however, we note this led to more generous inclusion of WM fixels than might be used for a typical FBA study.
+
+## Compute fixels, reorient, and compute FD & FC
+
+The next steps (Steps 13-17) are computed by the following scripts:
+- Pipeline 1 (site-specific processing): [`slurm_TH_step09_fixel_poptemp_1_sites.script`](/dwi_scripts/slurm_TH_step09_fixel_poptemp_1_sites.script)
+- Pipeline 2 (pooled processing): [`slurm_TH_step09b_fixel_poptemp2_global.script`](/dwi_scripts/slurm_TH_step09b_fixel_poptemp2_global.script)
+
+## Run tractography & smoothing
+
+The following scripts run whole-brain tractography & smoothing:
+- [`slurm_TH_step10_poptemp_tckgen.script`](/dwi_scripts/slurm_TH_step10_poptemp_tckgen.script): Runs wholebrain tractography & SIFT (template as input)
+- [`slurm_TH_step11_smoothing.script`](/dwi_scripts/slurm_TH_step11_smoothing.script): Runs connectivity-based smoothing
 

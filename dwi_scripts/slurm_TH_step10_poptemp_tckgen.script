@@ -1,0 +1,36 @@
+#!/bin/bash
+#SBATCH --account punim2175
+#SBATCH --nodes=1
+#SBATCH --ntasks=1
+#SBATCH --cpus-per-task=8
+#SBATCH --time=0-06:00:00
+#SBATCH --mem=128G
+#SBATCH --partition=sapphire
+#SBATCH -o /data/gpfs/projects/punim2175/T-HEADS/scripts/slurm_logs/slurm-%N.%j.out
+#SBATCH -e /data/gpfs/projects/punim2175/T-HEADS/scripts/slurm_errors/slurm-%N.%j.err
+
+# Author: Remika Mito
+# Date: 14 May 2025
+# Description: This script runs tckgen & SIFT
+
+# check arguments are provided
+if [ "$#" -ne 1 ]; then
+  echo "Usage: slurm_TH_step10_poptemp_tckgen.script [ID]"
+  exit 1
+fi
+
+# specify inputs
+TEMPLATE=$1
+TEMPDIR=/data/gpfs/projects/punim2175/T-HEADS/templates/${TEMPLATE}
+
+# load modules
+module load MRtrix/3.0.4
+
+# Step 1: Run tckgen
+#tckgen -angle 22.5 -maxlen 250 -minlen 10 -power 1.0 ${TEMPDIR}/wmfod_template.mif -seed_image ${TEMPDIR}/template_mask.mif -mask ${TEMPDIR}/template_mask.mif -select 20000000 -cutoff 0.06 ${TEMPDIR}/tracks_20_million.tck
+
+# Step 2: Run sift
+tcksift ${TEMPDIR}/tracks_20_million.tck ${TEMPDIR}/wmfod_template.mif ${TEMPDIR}/tracks_2_million_sift.tck -term_number 2000000
+
+# unload modules
+module unload MRtrix/3.0.4
