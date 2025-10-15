@@ -13,3 +13,9 @@ DWI data processing scripts are described in [dwi_scripts](/dwi_scripts/DWI_step
 # Data analysis
 
 Data analysis scripts are stored in [analysis_notebooks](/analysis_notebooks).
+
+
+# Data
+
+Response functions computed as part of our work are available in [data/response_functions](/data/response_functions).
+DWI data collected for this study are available on OpenNeuro (including FOD templates). 
