@@ -1,0 +1,6 @@
+# command_history: /apps/easybuild-2022/easybuild/software/MPI/GCC/11.3.0/OpenMPI/4.1.4/MRtrix/3.0.4/bin/responsemean TH001/FloreyPrisma/DWI_harmdwi/response_csf.txt TH002/FloreyPrisma/DWI_harmdwi/response_csf.txt TH003/FloreyPrisma/DWI_harmdwi/response_csf.txt TH004/FloreyPrisma/DWI_harmdwi/response_csf.txt TH005/FloreyPrisma/DWI_harmdwi/response_csf.txt TH006/FloreyPrisma/DWI_harmdwi/response_csf.txt TH007/FloreyPrisma/DWI_harmdwi/response_csf.txt TH008/FloreyPrisma/DWI_harmdwi/response_csf.txt TH009/FloreyPrisma/DWI_harmdwi/response_csf.txt TH010/FloreyPrisma/DWI_harmdwi/response_csf.txt ../group_rfs/FloreyPrisma_response_csf.txt  (version=3.0.4)
+28390.595598458639870
+9273.047572595209203
+1224.358979703236400
+412.540343383129766
+376.392150506273197

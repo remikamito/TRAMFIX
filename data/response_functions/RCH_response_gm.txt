@@ -1,0 +1,6 @@
+# command_history: /apps/easybuild-2022/easybuild/software/MPI/GCC/11.3.0/OpenMPI/4.1.4/MRtrix/3.0.4/bin/responsemean TH001/RCH/DWI_harmdwi/response_gm.txt TH002/RCH/DWI_harmdwi/response_gm.txt TH003/RCH/DWI_harmdwi/response_gm.txt TH004/RCH/DWI_harmdwi/response_gm.txt TH005/RCH/DWI_harmdwi/response_gm.txt TH006/RCH/DWI_harmdwi/response_gm.txt TH007/RCH/DWI_harmdwi/response_gm.txt TH008/RCH/DWI_harmdwi/response_gm.txt TH009/RCH/DWI_harmdwi/response_gm.txt TH010/RCH/DWI_harmdwi/response_gm.txt ../group_rfs/RCH_response_gm.txt  (version=3.0.4)
+12678.161179335180350
+9639.570833591398696
+5661.058150648495030
+2979.731486564492570
+1750.167487093789532

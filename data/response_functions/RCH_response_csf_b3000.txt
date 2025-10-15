@@ -1,0 +1,3 @@
+# command_history: /apps/easybuild-2022/easybuild/software/MPI/GCC/11.3.0/OpenMPI/4.1.4/MRtrix/3.0.4/bin/responsemean TH001/RCH/DWI_harmdwi/b3000_response_csf.txt TH002/RCH/DWI_harmdwi/b3000_response_csf.txt TH003/RCH/DWI_harmdwi/b3000_response_csf.txt TH004/RCH/DWI_harmdwi/b3000_response_csf.txt TH005/RCH/DWI_harmdwi/b3000_response_csf.txt TH006/RCH/DWI_harmdwi/b3000_response_csf.txt TH007/RCH/DWI_harmdwi/b3000_response_csf.txt TH008/RCH/DWI_harmdwi/b3000_response_csf.txt TH009/RCH/DWI_harmdwi/b3000_response_csf.txt TH010/RCH/DWI_harmdwi/b3000_response_csf.txt ../group_rfs/RCH_response_csf_b3000.txt  (version=3.0.4)
+35186.413374958661734
+415.084434897908409

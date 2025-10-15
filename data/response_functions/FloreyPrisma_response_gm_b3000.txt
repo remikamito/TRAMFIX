@@ -1,0 +1,3 @@
+# command_history: /apps/easybuild-2022/easybuild/software/MPI/GCC/11.3.0/OpenMPI/4.1.4/MRtrix/3.0.4/bin/responsemean TH001/FloreyPrisma/DWI_harmdwi/b3000_response_gm.txt TH002/FloreyPrisma/DWI_harmdwi/b3000_response_gm.txt TH003/FloreyPrisma/DWI_harmdwi/b3000_response_gm.txt TH004/FloreyPrisma/DWI_harmdwi/b3000_response_gm.txt TH005/FloreyPrisma/DWI_harmdwi/b3000_response_gm.txt TH006/FloreyPrisma/DWI_harmdwi/b3000_response_gm.txt TH007/FloreyPrisma/DWI_harmdwi/b3000_response_gm.txt TH008/FloreyPrisma/DWI_harmdwi/b3000_response_gm.txt TH009/FloreyPrisma/DWI_harmdwi/b3000_response_gm.txt TH010/FloreyPrisma/DWI_harmdwi/b3000_response_gm.txt ../group_rfs/FloreyPrisma_response_gm_b3000.txt  (version=3.0.4)
+9218.267414952568288
+1306.977295645799586
