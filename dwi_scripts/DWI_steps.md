@@ -42,6 +42,23 @@ Response function estimation was performed using the dhollander algorithm. In th
 - [`script_TH_step02_preproc_RF.sh`](/dwi_scripts/script_TH_step02_preproc_RF.sh): performs RF estimation, as well as preprocessing steps 4 & 5. 
 - [`slurm_TH_step02_preproc_RF.script`](/dwi_scripts/slurm_TH_step02_preproc_RF.script): performs the above on HPC system
 
+### Group average RFs
+
+For fixel-based analyses, the use of group-averaged response functions (RFs) are recommended. For multi-site studies, the way in which group-average RFs are computed may differ. Here, we test 2 approaches - using site-specific RFs (RF averaged across each site), versus pooled RFs across the whole cohort. 
+
+These were computed as:
+
+```
+### Site-specific group-average RF ###
+$ for site in FloreyPrisma FloreyVida MBI RCH ; do responsemean */$site/DWI_harmdwi/response_wm.txt ../group_rfs/${site}_response_wm.txt ;done
+$ for site in FloreyPrisma FloreyVida MBI RCH ; do responsemean */$site/DWI_harmdwi/response_gm.txt ../group_rfs/${site}_response_gm.txt ;done
+$ for site in FloreyPrisma FloreyVida MBI RCH ; do responsemean */$site/DWI_harmdwi/response_csf.txt ../group_rfs/${site}_response_csf.txt ;done
+
+### Pooled group-average RF ###
+$ responsemean */*/DWI_harmdwi/response_wm.txt ../group_rfs/global_average_response_wm.txt
+$ responsemean */*/DWI_harmdwi/response_gm.txt ../group_rfs/global_average_response_gm.txt
+$ responsemean */*/DWI_harmdwi/response_csf.txt ../group_rfs/global_average_response_csf.txt
+```
 
 ## Step 3: Tensor estimation 
 
